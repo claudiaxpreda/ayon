@@ -3,14 +3,13 @@ services:
   app:
     container_name: ayon-app
     restart: always
-    build: ./server
-    image:  ayon
+    image: claudiapreda2307/ayon:latest
     ports:
       - "80:3000"
     links:
       - mongo
   mongo:
-    container_name: mongo
+    container_name: ayon-mongo
     image: mongo
     ports:
       - "27017:27017"
