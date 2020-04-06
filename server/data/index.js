@@ -25,4 +25,4 @@ module.exports = {
   Users,
   Events,
   Todos
-}
+};

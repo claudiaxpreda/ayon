@@ -8,7 +8,7 @@ const {
 const {
     Users,
     Events
-} = require('../data')
+} = require('../data');
 
 
 router.get('/', async(req, res) => {
@@ -55,7 +55,7 @@ router.post('/register', async(req, res) => {
         }
     } catch (err) {
         throw(new Error(err.message));
-    };
+    }
 });
 
 
@@ -78,14 +78,13 @@ router.post('/login', async(req, res) => {
         }
     } catch (err) {
         throw(new Error(err.message));
-    };
-
+    }
 });
 
 router.get('/events', async(req, res)=> {
     if (req.session.loggedin) {
         const username = req.session.username;
-        const user = await Users.findOne({username})
+        const user = await Users.findOne({username});
 
         if (user) {
             const events = await Events.find({user: user.id});
@@ -105,7 +104,7 @@ router.get('/events/:id', async(req, res)=> {
     if (req.session.loggedin) {
         try {
             const event = await Events.findById(id);
-            const user = await Users.findOne({username})
+            const user = await Users.findOne({username});
 
             if (event.user === user.id) {
                 res.status(200).send(event);
@@ -114,7 +113,7 @@ router.get('/events/:id', async(req, res)=> {
             }
         } catch (err) {
             throw(new Error(err.message));
-        };
+        }
     } else {
         res.status(401).send('You are not logged in');
     }
@@ -156,7 +155,7 @@ router.put('/events/:id', async(req, res)=> {
             }
         } catch (err) {
             throw(new Error(err.message));
-        };
+        }
     } else {
         res.status(401).send('You are not logged in');
     }
@@ -178,7 +177,7 @@ router.delete('/events/:id', async(req, res)=> {
             }
         } catch (err) {
             throw(new Error(err.message));
-        };
+        }
     } else {
         res.status(401).send('You are not logged in');
     }

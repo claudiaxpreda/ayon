@@ -1,6 +1,6 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
 const ItemSchema = new Schema({
   name: {
@@ -15,7 +15,7 @@ const ItemSchema = new Schema({
     type: Boolean,
     default: false
   }
-}, { timestamps: true })
+}, { timestamps: true });
 
 const TodoSchema = new Schema({
   title: {
@@ -32,8 +32,8 @@ const TodoSchema = new Schema({
     type: Boolean,
     default: false
   }
-}, { timestamps: true })
+}, { timestamps: true });
 
-const TodoModel = mongoose.model('Todos', TodoSchema)
+const TodoModel = mongoose.model('Todos', TodoSchema);
 
-module.exports = TodoModel
+module.exports = TodoModel;

@@ -3,6 +3,6 @@ const router = express.Router();
 
 const {
     Events
-} = require('../data')
+} = require('../data');
 
 module.exports = router;

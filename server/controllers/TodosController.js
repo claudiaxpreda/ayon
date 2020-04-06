@@ -3,6 +3,6 @@ const router = express.Router();
 
 const {
     Todos
-} = require('../data')
+} = require('../data');
 
 module.exports = router;
