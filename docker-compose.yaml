@@ -1,0 +1,19 @@
+version: "3.7"
+services:
+  app:
+    container_name: ayon-app
+    restart: always
+    build: ./server
+    ports:
+      - "80:3000"
+    links:
+      - mongo
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ayon_data:/server/data/db
+volumes:
+  ayon_data:
