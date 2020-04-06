@@ -12,6 +12,7 @@ port = portul pe care este mapat containerul
 port = 80
 
 Acestea se pot testa astfel, urmand in ordine urmatoarele requesturi:
+    0. docker-compose up -d 
     1. Inregistrarea unui user:
         POST  http://host:port/users/register 
         {

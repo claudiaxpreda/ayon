@@ -4,6 +4,7 @@ services:
     container_name: ayon-app
     restart: always
     build: ./server
+    image:  ayon
     ports:
       - "80:3000"
     links:
@@ -14,6 +15,6 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - ayon_data:/server/data/db
+      - ayon_data:/server/data/db:rw
 volumes:
   ayon_data:
