@@ -12,19 +12,23 @@ port = portul pe care este mapat containerul
 port = 80
 
 Acestea se pot testa astfel, urmand in ordine urmatoarele requesturi:
-    0. docker-compose up -d 
-    1. Inregistrarea unui user:
+
+    0.  docker-compose up -d 
+
+    1.  Inregistrarea unui user:
         POST  http://host:port/users/register 
         {
             "username" : "test",
             "password" : "test"
         }
-    2. Autentificarea unui user:
+
+    2.  Autentificarea unui user:
         POST http://host:port/users/login
         {
             "username" : "test",
             "password" : "test"
         }
+
     3.  Adaugarea unui eveniment pentru un user:
         POST http://host:port/users/events 
         {
@@ -33,9 +37,10 @@ Acestea se pot testa astfel, urmand in ordine urmatoarele requesturi:
             "location" : "Bucharest"
         }
 
-    4. Vizualizarea evenimentelor adaugate de userul curent:
+    4.  Vizualizarea evenimentelor adaugate de userul curent:
         GET http://host:port/users/events
-    5. Modificarea unui eveniment 
+
+    5.  Modificarea unui eveniment 
         PUT http://host:port/users/events/event_id 
         {
             "title" : "My first event",
@@ -48,6 +53,7 @@ Acestea se pot testa astfel, urmand in ordine urmatoarele requesturi:
     7. Stergerea unui eveniment:
         DELETE http://host:port/users/events/event_id, 
         -- unde event_id este selectat din lista afisata la punctul 4;
+
     8. Repetarea punctului pentru a observa efectul 
 
 
