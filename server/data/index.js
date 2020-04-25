@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 (async () => {
   try {
-    await mongoose.connect('mongodb://mongo:27017/ayondb', {
+    await mongoose.connect(`mongodb://${process.env.DBHOST}:${process.env.DBPORT}/ayondb`, {
         useNewUrlParser: true,
         useUnifiedTopology: true
       });

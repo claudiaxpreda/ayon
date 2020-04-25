@@ -150,7 +150,7 @@ router.put('/events/:id', async(req, res)=> {
 
             if (event.user === user.id) {
                 await Events.findByIdAndUpdate(id, params);
-                res.status(200).send("Event updated it");
+                res.status(200).send("Event updated");
             } else {
                 res.status(500).send('Event not found');
             }
@@ -172,7 +172,7 @@ router.delete('/events/:id', async(req, res)=> {
 
             if (event.user === user.id) {
                 await Events.findByIdAndDelete(id);
-                res.status(200).send("Event deleted it");
+                res.status(200).send("Event deleted");
             } else {
                 res.status(500).send('Event not found');
             }

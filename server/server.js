@@ -3,9 +3,13 @@
 const express = require('express')
 const session = require('express-session')
 
+require('dotenv').config()
+console.log(`${process.env.DBPORT}`);
+
 const { PORT = '3000' } = process.env
 const routes = require('./routes');
 const app = express()
+
 
 app.use(session({
 	secret: 'secret',
