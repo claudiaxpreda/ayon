@@ -107,3 +107,7 @@ dist
 .vscode-test
 
 server/node_modules/
+
+client/cli
+client/test2.py
+client/__pycache__
