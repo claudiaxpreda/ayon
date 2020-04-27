@@ -13,7 +13,7 @@ router.get('/', async(req, res)=> {
         const user = await Users.findOne({username})
 
         if (user) {
-            const events = await Events.find({user: user.id});
+            const events = await Events.find({user: user.id}).select('title');
             res.status(200).send(events);
         } else {
             res.status(401).send('Please try again');
@@ -32,7 +32,7 @@ router.get('/:id', async(req, res)=> {
             const event = await Events.findById(id);
             const user = await Users.findOne({username})
 
-            if (event.user === user.id) {
+            if (event.user.toString() === user.id) {
                 res.status(200).send(event);
             } else {
                 res.status(500).send('Event not found');

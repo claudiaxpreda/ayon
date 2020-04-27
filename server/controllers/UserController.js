@@ -71,9 +71,11 @@ router.post('/login', async(req, res) => {
                 req.session.loggedin = true;
                 req.session.username = username;
                 res.status(200).send("Succes");
+            } else {
+                res.status(403).status("Wrong password")
             }
         }else {
-            res.status(401).send("Wrong username or password");
+            res.status(401).send("Wrong username");
         }
     } catch (err) {
         throw(new Error(err.message));
