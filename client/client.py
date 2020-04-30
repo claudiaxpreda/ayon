@@ -2,7 +2,7 @@ from __future__ import print_function, unicode_literals
 
 import json
 import requests
-import sys
+#import sys
 from settings import URL_SERVER
 
 from clint.textui import colored, puts, indent
@@ -22,152 +22,13 @@ from questions import *
 pprint(URL_SERVER)
 s = requests.Session()
 
-def menu_choices(answers):
-    choices = []
-    value = ''
-    values = ''
-    if answers['menu'] == 'events':
-        value = 'Event'
-        values = 'Events'
-    elif answers['menu'] == 'activities':
-        value = 'Activity'
-        values = 'Activities'
-    elif answers['menu'] == 'todos':
-        value = 'Todo List'
-        values = 'Todo Lists'
-    else:
-        sys.exit()
 
-
-    choices = [
-        {
-            'name': '1. Add {var}'.format(var=value),
-            'value': 'add'
-        },
-        Separator(),
-        {
-            'name': '2. See {var}'.format(var=values),
-            'value': 'list'
-        },
-        Separator(),
-        {
-            'name': '3. Go back to menu',
-            'value': 'back'
-        }
-    ]
-
-    single_choices = [
-        Separator(),
-        {
-            'name': '1. Update {var}'.format(var=value),
-            'value': 'update'
-        },
-        Separator(),
-        {
-            'name': '2. Delete {var}'.format(var=value),
-            'value': 'delete'
-        },
-        Separator(),
-        {
-            'name': '3. Go back to {} list'.format(values),
-            'value': 'back'
-        },
-    ]
-
-    question_single = {
-        'type': 'list',
-        'name': '{var}'.format(var=answers['menu']),
-        'qmark': '😃',
-        'message': '',
-        'choices': single_choices
-    }
-    question_actions = {
-        'type': 'list',
-        'name': '{var}'.format(var=answers['menu']),
-        'qmark': '😃',
-        'message': '',
-        'choices': choices
-    }
-    return (question_actions, question_single, answers['menu'])
-
-question_add_event = [
-        
-    {
-        'type': 'input',
-        'name': 'title',
-        'message': '*Title:',
-        'validate': lambda answer: 'Title is required.' \
-            if len(answer) == 0 else True
-    },
-    {
-        'type': 'input',
-        'name': 'description',
-        'message': '*Description:',
-        'validate': lambda answer: 'Description is required.' \
-            if len(answer) == 0 else True
-    },
-    {
-        'type': 'input',
-        'name': 'location',
-        'message': 'Location:',
-        'default': 'None'
-    },
-    {
-        'type': 'input',
-        'name': 'time',
-        'message': 'Date:\n Format: YYYY-MM-DD',
-        'default': 'None',
-        'validate': lambda answer: 'Description is required.' \
-            if len(answer) == 0 else True
-    },
-    {
-        'type': 'input',
-        'name': 'hour',
-        'message': 'Time:\n Format: HH:MM',
-        'when': lambda answers: answers['time'] != 'None'
-    },
-    {
-        'type': 'rawlist',
-        'name': 'importance',
-        'message': 'Importance:',
-        'choices': ['Low', 'Medium', 'High', 'None'],
-        'filter': lambda val: val.lower()
-    }
-
-]
-
-
-def question_events_list(item_list, key):
-    choices = [Separator('')]
-    itemq = {
-        'name': 'Go back',
-        'value': 'back'
-    }
-    choices.append(itemq)
-    choices.append(Separator())
-
-    for item in item_list:
-        itemq = {
-            'name': '{}'.format(item[key]),
-            'value': '{}'.format(item['_id'])
-        }
-        choices.append(itemq)
-        choices.append(Separator())
-
-    question = {
-        'type': 'list',
-        'name': 'list',
-        'qmark': '😃',
-        'message': 'Events by name',
-        'choices': choices
-    }
-    return question
 
 def print_event_data(event):
     keys = event.keys()
 
     if 'time' in keys:
-        date = '{}/{}'.format(event['time'][:9],\
+        date = '{}/{}'.format(event['time'][:10],\
                                     event['time'][11:16])
     else:
         date = None
@@ -180,40 +41,78 @@ def print_event_data(event):
         puts(colored.green('Importance: ', bold=True) + (event['importance']\
                 if 'importance' in keys else 'No importance provided'))
 
-def mange_item_action(base_url,command, item, single_q):
-    events = {}
 
+def getRequest(base_url):
+    response = s.get(base_url)
+    return json.loads(response.content.decode('utf-8'))
+
+def postRequest(base_url, data):
+    response = s.post(base_url, json=data)
+    return response.content.decode('utf-8')
+
+def getByIdRequest(base_url, id):
+    response = s.get('{}/{}'.format(base_url, id))
+    return json.loads(response.content.decode('utf-8'))
+
+def deleteById(base_url, id):
+    response = s.delete('{}/{}'.format(base_url, id))
+    return response.content.decode('utf-8')
+
+def updateById(base_url, id, data):
+    response = s.put('{}/{}'.format(base_url, id), json=data)
+    return response.content.decode('utf-8')
+
+def dateFormat(data):
+    data['time'] = '{}T{}:00.000Z'.format(data['time'], data['hour'])
+    del data['hour']
+
+
+
+def mange_item_action(base_url,command, key, single_q):
     if command == 'add':
-        if item is 'events':
+        if key == 'events':
             data = prompt(question_add_event, style=custom_style_2)
             data = {k: v for k, v in data.items() if v.lower() != 'none'}
             if 'hour' in data.keys():
-                data['time'] = '{}T{}:00.000Z'.format(data['time'], data['hour'])
-                del data['hour']
-            response = s.post(base_url, json=data)
-            puts(colored.red(response.content.decode('utf-8')))
-    if command == 'list':
-        response = s.get(base_url)
-        events_list = json.loads(response.content.decode('utf-8'))
+                data = dateFormat(data)
+            pprint(data)
+            response = postRequest(base_url, data)
+            puts(colored.red(response))
+
+    if command == 'list' and key == 'events':
+        items_list = getRequest(base_url)
         while True:
-            events_question = question_events_list(events_list, 'title')
-            event = prompt(events_question, style=custom_style_2)
-            if event['list'] is not 'back':
+            # Method for generate question item
+            items_question = question_items_list(items_list, 'title')
+            item = prompt(items_question, style=custom_style_2)
+            if item['list'] != 'back':
                 while True:
-                    response = s.get('{}/{}'.format(base_url, event['list']))
-                    data =json.loads( response.content.decode('utf-8'))
+                    data = getByIdRequest(base_url, item['list'])
                     print_event_data(data)
                     answer = prompt(single_q, style=custom_style_2)
-                    #break
-                    if answer[item] is not 'update':
-                        if answer[item] is 'delete':
-                            response = s.delete('{}/{}'.format(base_url, event['list']))
-                            puts(colored.red(response.content.decode('utf-8')))
-                            response = s.get(base_url)
-                            events_list = json.loads(response.content.decode('utf-8'))
+
+                    if answer[key] is not 'update':
+                        if answer[key] is 'delete':
+                            response = deleteById(base_url, item['list'])
+                            puts(colored.red(response))
+                            events_list = getRequest(base_url)
                         break
+
+                    answer = prompt(get_update_checkbox(UPDATE_EVENTS_OPT), style=custom_style_2)
+                    data = prompt(get_update_question(answer['fields_to_update'], data), style=custom_style_3)
+                    if 'hour' in data.keys():
+                        dateFormat(data)
+                    response = updateById(base_url, item['list'], data)
+                    puts(response)
+                    pprint(answer)
+
             else:
-                manage_action({'menu': item})
+                manage_action({'menu': key})
+        if command == 'list' and key == 'todos':
+            items_list = getRequest(  base_url = '{}/{}'.format(URL_SERVER, key))
+
+
+
         if command == 'back':
             menu()
 
