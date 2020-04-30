@@ -28,10 +28,6 @@ const TodoSchema = new Schema({
     required: true
   },
   items: [ItemSchema],
-  done: {
-    type: Boolean,
-    default: false
-  }
 }, { timestamps: true })
 
 const TodoModel = mongoose.model('Todos', TodoSchema)
