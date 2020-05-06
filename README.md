@@ -38,7 +38,7 @@ Acestea se pot testa astfel, urmand in ordine urmatoarele requesturi:
         }
 
     4.  Vizualizarea evenimentelor adaugate de userul curent:
-        GET http://host:port/users/events
+        GET http://host:port/api/users/events
 
     5.  Modificarea unui eveniment 
         PUT http://host:port/users/events/event_id 
