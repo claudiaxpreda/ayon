@@ -16,14 +16,14 @@ Acestea se pot testa astfel, urmand in ordine urmatoarele requesturi:
     0.  docker-compose up -d 
 
     1.  Inregistrarea unui user:
-        POST  http://host:port/users/register 
+        POST  http://host:port/api/users/register 
         {
             "username" : "test",
             "password" : "test"
         }
 
     2.  Autentificarea unui user:
-        POST http://host:port/users/login
+        POST http://host:port/api/users/login
         {
             "username" : "test",
             "password" : "test"
