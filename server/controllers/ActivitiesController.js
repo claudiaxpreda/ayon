@@ -3,7 +3,7 @@ const router = express.Router();
 
 const {
     Users,
-    Activities
+    Activities,
 } = require('../data')
 
 
@@ -32,7 +32,7 @@ router.get('/:id', async(req, res)=> {
             const activity = await Activities.findById(id);
             const user = await Users.findOne({username})
 
-            if (activity.user === user.id) {
+            if (activity.user.toString() === user.id) {
                 res.status(200).send(activity);
             } else {
                 res.status(500).send('Activity not found');
@@ -70,10 +70,10 @@ router.put('/:id', async(req, res)=> {
     const username = req.session.username;
     if (req.session.loggedin) {
         try {
-            const user = Users.findOne({username});
-            const activity = Activities.findById(id);
+            const user = await Users.findOne({username});
+            const activity = await Activities.findById(id);
 
-            if (activity.user === user.id) {
+            if (activity.user.toString() === user.id) {
                 await Activities.findByIdAndUpdate(id, params);
                 res.status(200).send("Activity updated");
             } else {
@@ -95,7 +95,7 @@ router.delete('/:id', async(req, res)=> {
             const user = Users.findOne({username});
             const activity = Activities.findById(id);
 
-            if (activity.user === user.id) {
+            if (activity.user.toString() === user.id) {
                 await Activities.findByIdAndDelete(id);
                 res.status(200).send("Activity deleted");
             } else {

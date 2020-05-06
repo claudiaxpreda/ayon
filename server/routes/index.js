@@ -8,6 +8,6 @@ const ActivitiesController = require('../controllers/ActivitiesController');
 
 Router.use('/users', UsersController);
 Router.use('/events', EventsController)
-Router.use('/todolist', TodosController)
+Router.use('/todolists', TodosController)
 Router.use('/activities', ActivitiesController)
 module.exports = Router;

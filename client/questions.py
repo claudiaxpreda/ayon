@@ -3,13 +3,14 @@ from PyInquirer import Separator
 
 
 UPDATE_EVENTS_OPT = ['Title', 'Description', 'Time', 'Location', 'Importance']
-UPDATE_TODOS_OPT = ['Name']
+UPDATE_TODOS_OPT = ['Title']
 UPDATE_ITEMS_OPT = ['Status']
 UPDATE_ACTIVITIES_OPT = ['Steps', 'Kcal', 'Food', 'Date']
 
 question = {
         'type': 'list',
         'name': 'authentification',
+        'qmark': '😃',
         'message': 'Are you already an user?',
            'choices': [ 
             'Login',
@@ -21,31 +22,46 @@ question = {
 question_register = [
     {
         'type': 'input',
+        'qmark': '😃',
         'name': 'username',
         'message': 'Username:',
+        'validate': lambda answer: 'Username is required.' \
+                if len(answer) == 0 else True
     },
     {
         'type': 'password',
         'name': 'password',
+        'qmark': '😃',
         'message': 'Password:',
+        'validate': lambda answer: 'Password is required.' \
+                if len(answer) == 0 else True
     },
-    # {
-    #     'type': 'input',
-    #     'name': 'email',
-    #     'message': 'Email:',
-    # },
+    {
+        'type': 'input',
+        'qmark': '😃',
+        'name': 'email',
+        'message': 'Email:',
+        'validate': lambda answer: 'E -mail is required.' \
+                if len(answer) == 0 else True
+    },
 ]
 
 question_login = [
     {
         'type': 'input',
+        'qmark': '😃',
         'name': 'username',
         'message': 'Username:',
+        'validate': lambda answer: 'Username is required.' \
+                if len(answer) == 0 else True
     },
     {
         'type': 'password',
+        'qmark': '😃',
         'name': 'password',
         'message': 'Password:',
+        'validate': lambda answer: 'Password is required.' \
+                if len(answer) == 0 else True
     }
 ]
 
@@ -67,11 +83,16 @@ question_menu = {
         Separator(),
         {
             'name': '3. Go to Todo Lists',
-            'value': 'todos'
+            'value': 'todolists'
         },
         Separator(),
         {
-            'name': '4. Exit',
+            'name': '4. Send reminder',
+            'value': 'reminder'
+        },
+        Separator(),
+        {
+            'name': '5. Exit',
             'value': 'exit'
         }
     ]
@@ -82,12 +103,14 @@ question_add_event = [
     {
         'type': 'input',
         'name': 'title',
+        'qmark': '😃',
         'message': '*Title:',
         'validate': lambda answer: 'Title is required.' \
             if len(answer) == 0 else True
     },
     {
         'type': 'input',
+        'qmark': '😃',
         'name': 'description',
         'message': '*Description:',
         'validate': lambda answer: 'Description is required.' \
@@ -95,12 +118,14 @@ question_add_event = [
     },
     {
         'type': 'input',
+        'qmark': '😃',
         'name': 'location',
         'message': 'Location:',
         'default': 'None'
     },
     {
         'type': 'input',
+        'qmark': '😃',
         'name': 'time',
         'message': 'Date:\n Format: YYYY-MM-DD',
         'default': 'None',
@@ -109,6 +134,7 @@ question_add_event = [
     },
     {
         'type': 'input',
+        'qmark': '😃',
         'name': 'hour',
         'message': 'Time:\n Format: HH:MM',
         'when': lambda answers: answers['time'] != 'None',
@@ -117,6 +143,7 @@ question_add_event = [
     },
     {
         'type': 'rawlist',
+        'qmark': '😃',
         'name': 'importance',
         'message': 'Importance:',
         'choices': ['Low', 'Medium', 'High', 'None'],
@@ -124,6 +151,7 @@ question_add_event = [
     }
 
 ]
+
 
 question_add_todo_list = {
     'type': 'input',
@@ -144,8 +172,10 @@ question_add_item_list = [
     {
         'type': 'input',
         'name': 'description',
-        'message': '*Name:',
-    }
+        'message': '*Description:',
+        'validate': lambda answer: 'Description is required.' \
+            if len(answer) == 0 else True
+    },
 ]
 
 question_add_activity = [
@@ -174,6 +204,7 @@ question_add_activity = [
             if len(answer) == 0 else True
     },
 ]
+
 def getDateTime(date_format):
     date = date_format[:10]
     hour = date_format[11:16]
@@ -189,6 +220,7 @@ def get_update_checkbox(items):
 
     return {
         'type': 'checkbox',
+        'qmark': '😃',
         'name': 'fields_to_update',
         'message': 'Select what fields to update:',
         "choices": choices 
@@ -198,19 +230,21 @@ def get_update_question(answer, data):
     question=[]
     for item in answer:
         key = item.lower()
-
+        print(key)
         if key != 'time' and key != 'importance':
             value =  data[key] if key in data.keys() else 'None'
             itemq = {
                 'type': 'input',
+                'qmark': '😃',
                 'name': key,
                 'message': '{}:'.format(item),
-                'default': value
+                'default': str(value)
             }
             question.append(itemq)
         elif key == 'importance':
             itemq = {
                 'type': 'rawlist',
+                'qmark': '😃',
                 'name': 'importance',
                 'message': 'Importance:',
                 'choices': ['Low', 'Medium', 'High', 'None'],
@@ -221,12 +255,14 @@ def get_update_question(answer, data):
             date, hour = getDateTime(data[key])
             itemq = {
                 'type': 'input',
+                'qmark': '😃',
                 'name': key,
                 'message': 'Date:',
                 'default': date
             }
             item_time = {
                 'type': 'input',
+                'qmark': '😃',
                 'name': 'hour',
                 'message': 'Hour:',
                 'default': hour,
@@ -251,12 +287,11 @@ def menu_choices(answers):
     elif answers['menu'] == 'activities':
         value = 'Activity'
         values = 'Activities'
-    elif answers['menu'] == 'todos':
+    elif answers['menu'] == 'todolists':
         value = 'Todo List'
         values = 'Todo Lists'
     else:
         sys.exit()
-
 
     choices = [
         {
@@ -292,6 +327,14 @@ def menu_choices(answers):
             'value': 'back'
         },
     ]
+
+    if answers['menu'] == 'todolists':
+        single_choices.append(Separator())
+        single_choices.append(  {
+            'name': '4. Add Item',
+            'value': 'additem'
+        },)
+
 
     question_single = {
         'type': 'list',
@@ -330,7 +373,7 @@ def question_items_list(item_list, key):
         'type': 'list',
         'name': 'list',
         'qmark': '😃',
-        'message': 'Events by name',
+        'message': '{} by name'.format(key),
         'choices': choices
     }
     return question

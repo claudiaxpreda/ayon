@@ -2,14 +2,14 @@
 
 const express = require('express')
 const session = require('express-session')
+const cors = require('cors');
 
 require('dotenv').config()
-console.log(`${process.env.DBPORT}`);
 
-const { PORT = '3000' } = process.env
 const routes = require('./routes');
 const app = express()
 
+app.use(cors());
 
 app.use(session({
 	secret: 'secret',
@@ -33,4 +33,4 @@ app.post('/api/events', (req, res) => {
   res.send('request to add one event')
 })
 
-app.listen(PORT, () => console.log(`App is listening on port ${PORT}!`))
+app.listen(process.env.PORT, () => console.log(`App is listening on port ${process.env.PORT}!`))

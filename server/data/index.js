@@ -18,11 +18,14 @@ mongoose.set('useFindAndModify', false);
 const Users = require('./models/Users.js');
 const Events = require('./models/Events.js');
 const Todos = require('./models/Todos.js');
+const Activities = require('./models/Activities.js');
+
 
 
 
 module.exports = {
   Users,
   Events,
-  Todos
+  Todos,
+  Activities
 }

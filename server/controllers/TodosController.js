@@ -35,7 +35,7 @@ router.get('/:id', async(req, res)=> {
             const todolist = await Todos.findById(id);
             const user = await Users.findOne({username})
 
-            if (todolist.user === user.id) {
+            if (todolist.user.toString() == user.id) {
                 res.status(200).send(todolist);
             } else {
                 res.status(500).send('Todo list not found');
@@ -75,9 +75,9 @@ router.put('/:id/item', async(req, res)=> {
     const username = req.session.username;
     if (req.session.loggedin) {
         try {
-            const todolist = Todos.findById(id);
-            const user = Users.findOne({username});
-            if (todolist && todolist.user === user.id) {
+            const todolist = await Todos.findOne({_id: id});
+            const user = await Users.findOne({username});
+            if (todolist && todolist.user.toString() === user.id) {
                 await todolist.update(
                     { $push: { items: params } }
                 );
@@ -100,10 +100,10 @@ router.put('/:id', async(req, res)=> {
     const username = req.session.username;
     if (req.session.loggedin) {
         try {
-            const user = Users.findOne({username});
-            const todolist = Todos.findById(id);
+            const todolist = await Todos.findById(id);
+            const user = await Users.findOne({username});
 
-            if (todolist.user === user.id) {
+            if (todolist.user.toString() === user.id) {
                 await Todos.findByIdAndUpdate(id, params);
                 res.status(200).send("Todo list updated");
             } else {
@@ -126,7 +126,7 @@ router.delete('/:id', async(req, res)=> {
             const user = Users.findOne({username});
             const todolist = Todos.findById(id);
 
-            if (todolist.user === user.id) {
+            if (todolist.user.toString() === user.id) {
                 await Todos.findByIdAndDelete(id);
                 res.status(200).send("Todo list deleted");
             } else {
@@ -143,14 +143,14 @@ router.delete('/:id', async(req, res)=> {
 /*Delete an item */
 router.put('/:id/item/delete/:itemid', async(req, res)=> {
     const {id, itemid} = req.params;
-    console.log(itemid);
     const username = req.session.username;
+
     if (req.session.loggedin) {
         try {
-            const user = Users.findOne({username});
-            const todolist = Todos.findById(id);
+            const user = await Users.findOne({username});
+            const todolist = await Todos.findById(id);
 
-            if (todolist.user === user.id) {
+            if (todolist.user.toString() === user.id) {
                 await Todos.findByIdAndUpdate(
                     id, 
                     { "$pull": { "items": { "_id": itemid } }},
@@ -171,14 +171,14 @@ router.put('/:id/item/delete/:itemid', async(req, res)=> {
 router.put('/:id/item/:itemid', async(req, res)=> {
     const {id, itemid} = req.params;
     const {done} = req.body;
-    console.log(done);
     const username = req.session.username;
+
     if (req.session.loggedin && !done) {
         try {
-            const user = Users.findOne({username});
-            const todolist = Todos.findById(id);
+            const user = await Users.findOne({username});
+            const todolist = await Todos.findById(id);
 
-            if (todolist.user === user.id) {
+            if (todolist.user.toString() === user.id) {
                 await Todos.findOneAndUpdate({_id: id, items: {$elemMatch: {_id: itemid}}},
                     {$set: {'items.$.done': done}},
                     {'new': true, 'safe': true, 'upsert': true});

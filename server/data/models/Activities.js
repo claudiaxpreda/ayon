@@ -17,7 +17,8 @@ const ActivitySchema = new Schema({
     },
     date: {
         type: Date,
-        required: true,
+        default: Date.now(),
+        required: false,
     },
     user: {
         type: Schema.Types.ObjectId,
@@ -26,5 +27,6 @@ const ActivitySchema = new Schema({
     },
 }, { timestamps: true });
 
-const ActivityModel = mongoose.model('Activity', AcivitySchema);
+
+const ActivityModel = mongoose.model('Activities', ActivitySchema);
 module.exports = ActivityModel;
