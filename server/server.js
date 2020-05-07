@@ -3,12 +3,8 @@
 const express = require('express')
 const session = require('express-session')
 const cors = require('cors');
-const promBundle = require("express-prom-bundle")
-
-const client = require('prom-client');
-const collectDefaultMetrics = client.collectDefaultMetrics;
-const prefix = 'my_application_';
-collectDefaultMetrics({ prefix });
+const promMid = require('express-prometheus-middleware');
+const methodOverride = require('method-override');
 
 require('dotenv').config()
 
@@ -16,13 +12,20 @@ const routes = require('./routes');
 const app = express()
 
 app.use(cors());
-
+app.options('*', cors())
 
 app.use(session({
 	secret: 'secret',
 	resave: true,
 	saveUninitialized: true
 }));
+
+app.use(promMid({
+  metricsPath: '/metrics',
+  collectDefaultMetrics: true,
+  requestDurationBuckets: [0.1, 0.5, 1, 1.5],
+}));
+app.use(methodOverride('_method'));
 
 app.use(express.json());
 
