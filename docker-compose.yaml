@@ -1,38 +1,59 @@
 version: "3.7"
 services:
   app:
-    container_name: ayon-app
     restart: always
-    image: claudiapreda2307/ayon:latest
+    image: claudiapreda2307/ayon-server:latest
     ports:
       - "80:3001"
     links:
       - mongo
     networks:
       - backend
+    deploy:
+      replicas: 1
+
   mongo:
-    container_name: ayon-mongo
-    networks:
-      - backend
     image: mongo
     ports:
       - "27017:27017"
     volumes:
       - ayon_data:/server/data/db:rw
+    networks:
+      - backend
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
   
   reminder:
-    container_name: ayon-reminder
-    image: claudiapreda2307/ayon:reminder
+    image: claudiapreda2307/ayon-reminder:latest
+    restart: always
     ports:
       - "8082:8082"
     links:
       - app
     networks:
       - backend
+    deploy:
+      replicas: 1
+    
+  client:
+    image: claudiapreda2307/ayon-client:latest
+    restart: always
+    ports:
+      - "5002:5002"
+    links:
+      - app
+    networks:
+      - frontend
+      - backend
+    deploy:
+      replicas: 2
+    stdin_open: true
+    tty: true
 
   prometheus:
     image: prom/prometheus:latest
-    user: root
     volumes:
         - ./statistics/prometheus.yml:/etc/prometheus/prometheus.yml
     command:
@@ -41,21 +62,20 @@ services:
         - '9090:9090'
     networks:
         - backend
+    deploy:
+      replicas: 1
+
   node-exporter:
       image: prom/node-exporter:latest
       ports:
         - '9100:9100'
       networks:
         - backend
-  # grafana:
-  #       image: grafana/grafana:3.0.0-beta7
-  #       environment:
-  #           - GF_SECURITY_ADMIN_PASSWORD=pass
-  #       depends_on:
-  #           - prometheus
-  #       ports:
-  #           - "3000:3000"
+      deploy:
+        replicas: 1
+
 volumes:
   ayon_data:
 networks:
     backend:
+    frontend:
