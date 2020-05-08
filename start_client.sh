@@ -1,0 +1,1 @@
+docker attach ayon_client_1
