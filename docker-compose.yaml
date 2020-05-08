@@ -3,13 +3,17 @@ services:
   app:
     container_name: ayon-app
     restart: always
-    image: ayon
+    image: claudiapreda2307/ayon:latest
     ports:
       - "80:3001"
     links:
       - mongo
+    networks:
+      - backend
   mongo:
     container_name: ayon-mongo
+    networks:
+      - backend
     image: mongo
     ports:
       - "27017:27017"
@@ -18,31 +22,40 @@ services:
   
   reminder:
     container_name: ayon-reminder
-    image: reminder
+    image: claudiapreda2307/ayon:reminder
     ports:
       - "8082:8082"
     links:
       - app
+    networks:
+      - backend
 
   prometheus:
-    image: prom/prometheus:0.18.0
+    image: prom/prometheus:latest
+    user: root
     volumes:
         - ./statistics/prometheus.yml:/etc/prometheus/prometheus.yml
     command:
-        - '-config.file=/etc/prometheus/prometheus.yml'
+        - '--config.file=/etc/prometheus/prometheus.yml'
     ports:
         - '9090:9090'
+    networks:
+        - backend
   node-exporter:
-      image: prom/node-exporter:v0.18.1
+      image: prom/node-exporter:latest
       ports:
         - '9100:9100'
-  grafana:
-        image: grafana/grafana:3.0.0-beta7
-        environment:
-            - GF_SECURITY_ADMIN_PASSWORD=pass
-        depends_on:
-            - prometheus
-        ports:
-            - "3000:3000"
+      networks:
+        - backend
+  # grafana:
+  #       image: grafana/grafana:3.0.0-beta7
+  #       environment:
+  #           - GF_SECURITY_ADMIN_PASSWORD=pass
+  #       depends_on:
+  #           - prometheus
+  #       ports:
+  #           - "3000:3000"
 volumes:
   ayon_data:
+networks:
+    backend:

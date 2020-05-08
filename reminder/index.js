@@ -3,9 +3,18 @@ require('dotenv').config()
 const express = require('express')
 const nodemailer = require('nodemailer')
 const fs = require('fs')
+const promMid = require('express-prometheus-middleware');
 
 const app = express()
+
+app.use(promMid({
+  metricsPath: '/metrics',
+  collectDefaultMetrics: true,
+  requestDurationBuckets: [0.1, 0.5, 1, 1.5],
+}));
+
 app.use(express.json())
+
 
 let transporter = nodemailer.createTransport({
   service: 'gmail',

@@ -1,7 +1,5 @@
+
 FROM python:3.5-alpine
-
-
-EXPOSE 5002
 
 WORKDIR /capp
 
@@ -13,4 +11,6 @@ RUN apk add --no-cache --update gcc libc-dev linux-headers
 RUN pip install -r requirements.txt
 
 COPY . /capp
+
+EXPOSE 5002
 ENTRYPOINT ["python", "client.py"]
