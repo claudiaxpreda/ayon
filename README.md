@@ -1,35 +1,45 @@
 # Ayon - Daily Planner Application
 
-## Etapa 2 - testing
+## Description 
+This is a planning application which offers the following functuonalities: 
+- Create an account (User).
+- Create Events/ Activities and ToDo lists.
+- Receive reminders via Email for Events.
 
-Etapa doi a constat in implementarea autentificarii unui user si implemenntarea operatiilor
-cu evenimente.
+The application is split in services using Docker. 
+The server part of the application is implemented in NodeJS. 
+The client is an interactive CLI prompt implemented in Python. 
+The reminder service is implemented in NodeJS.
 
-host = adresa ip a masinii docker, in cazul Dockert Toolbox
-        /localhost (pentru linux sau docker for windows)
-        / 0.0.0.0 (in anumite cazuri)
-port = portul pe care este mapat containerul
+
+
+## How to test the application
+
+host = IP address of the testing machine, for Dockert Toolbox
+        /localhost (linux | docker for windows)
+        / 0.0.0.0 (other cases)
+port = the port on which the container is mapped
 port = 80
 
-Acestea se pot testa astfel, urmand in ordine urmatoarele requesturi:
+Examples of requests to test the functionality:
 
     0.  docker-compose up -d 
 
-    1.  Inregistrarea unui user:
+    1.  Register a user:
         POST  http://host:port/api/users/register 
         {
             "username" : "test",
             "password" : "test"
         }
 
-    2.  Autentificarea unui user:
+    2.  Authenticate an user:
         POST http://host:port/api/users/login
         {
             "username" : "test",
             "password" : "test"
         }
 
-    3.  Adaugarea unui eveniment pentru un user:
+    3.  Add an event for an user:
         POST http://host:port/users/events 
         {
             "title" : "My first event",
@@ -37,10 +47,10 @@ Acestea se pot testa astfel, urmand in ordine urmatoarele requesturi:
             "location" : "Bucharest"
         }
 
-    4.  Vizualizarea evenimentelor adaugate de userul curent:
+    4.  See events added for an user:
         GET http://host:port/api/users/events
 
-    5.  Modificarea unui eveniment 
+    5.  Update an event:
         PUT http://host:port/users/events/event_id 
         {
             "title" : "My first event",
@@ -48,13 +58,13 @@ Acestea se pot testa astfel, urmand in ordine urmatoarele requesturi:
             "location" : "Bucharest"
         }, unde event_id este selectat din lista afisata la punctul 4;
 
-    6. Repetarea punctului 4 pentru a observa modificarea
+    6. Repeaat 4 to observer the change.
 
-    7. Stergerea unui eveniment:
+    7. Delete an event:
         DELETE http://host:port/users/events/event_id, 
-        -- unde event_id este selectat din lista afisata la punctul 4;
+        -- where event_id is selected from the list dispalayed at 4.
 
-    8. Repetarea punctului pentru a observa efectul 
+    8. Repeaat 4 to observer the change.
 
 
   
